@@ -1,8 +1,26 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  LabelList,
+  CartesianGrid,
+  Brush,
+  LineChart,
+  Line,
+  Legend,
+} from "recharts";
 import { motion } from "framer-motion";
-import { ArrowDownRight, ArrowUpRight, TrendingUp, CalendarDays } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  TrendingUp,
+  CalendarDays,
+} from "lucide-react";
 
 export default function App() {
   const [data, setData] = useState([]);
@@ -82,7 +100,8 @@ export default function App() {
   const topDay =
     Object.entries(dayCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
 
-  const uniqueDestinos = [...new Set(filteredData.map((d) => d.destino))].length;
+  const uniqueDestinos = [...new Set(filteredData.map((d) => d.destino))]
+    .length;
 
   // Timeline data
   const timelineData = filteredData.map((item) => ({
@@ -98,9 +117,15 @@ export default function App() {
       const d = payload[0].payload;
       return (
         <div className="bg-gray-800 text-white p-2 rounded-md border border-gray-700">
-          <p><b>Fecha:</b> {d.fecha}</p>
-          <p><b>Cantidad:</b> {d.monto.toLocaleString()}</p>
-          <p><b>Cuenta destino:</b> {d.destino}</p>
+          <p>
+            <b>Fecha:</b> {d.fecha}
+          </p>
+          <p>
+            <b>Cantidad:</b> {d.monto.toLocaleString()}
+          </p>
+          <p>
+            <b>Cuenta destino:</b> {d.destino}
+          </p>
         </div>
       );
     }
@@ -138,7 +163,9 @@ export default function App() {
               <span className="flex items-center gap-2">
                 <ArrowUpRight className="text-green-400" /> Depósitos:
               </span>
-              <span className="text-green-400">{deposits.toLocaleString()}</span>
+              <span className="text-green-400">
+                {deposits.toLocaleString()}
+              </span>
             </li>
             <li className="flex justify-between border-b border-gray-700 pb-2">
               <span className="flex items-center gap-2">
@@ -154,19 +181,22 @@ export default function App() {
             </li>
             <li className="flex justify-between border-b border-gray-700 pb-2">
               <span className="flex items-center gap-2">
-                <ArrowUpRight className="text-blue-400" /> Cuenta destino con más movimiento:
+                <ArrowUpRight className="text-blue-400" /> Cuenta destino con
+                más movimiento:
               </span>
               <span>{topAccount}</span>
             </li>
             <li className="flex justify-between border-b border-gray-700 pb-2">
               <span className="flex items-center gap-2">
-                <CalendarDays className="text-purple-400" /> Día con más transacciones:
+                <CalendarDays className="text-purple-400" /> Día con más
+                transacciones:
               </span>
               <span>{topDay}</span>
             </li>
             <li className="flex justify-between border-b border-gray-700 pb-2">
               <span className="flex items-center gap-2">
-                <ArrowUpRight className="text-pink-400" /> Total cuentas destino:
+                <ArrowUpRight className="text-pink-400" /> Total cuentas
+                destino:
               </span>
               <span>{uniqueDestinos}</span>
             </li>
@@ -224,7 +254,9 @@ export default function App() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <h2 className="text-xl font-semibold mb-4 text-indigo-400">Timeline Financiero</h2>
+        <h2 className="text-xl font-semibold mb-4 text-indigo-400">
+          Timeline Financiero
+        </h2>
         <div className="h-96 overflow-x-scroll">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -277,9 +309,7 @@ export default function App() {
                     key={i}
                     className="border-b border-gray-800 hover:bg-gray-800/60 transition"
                   >
-                    <td className="py-2 px-3">
-                      {row.fecha.toLocaleString()}
-                    </td>
+                    <td className="py-2 px-3">{row.fecha.toLocaleString()}</td>
                     <td
                       className={`py-2 px-3 font-semibold ${
                         row.tipo === "deposit"
