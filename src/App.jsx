@@ -12,6 +12,7 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   CalendarDays,
+  Siren,
 } from "lucide-react";
 import {
   PieChart,
@@ -189,13 +190,17 @@ export default function App() {
   const totalTransfers = filtered
     .filter((r) => r.type.includes("transfer"))
     .reduce((sum, r) => sum + r.amount, 0);
-  const balance = totalDeposits - totalTransfers;
+  const totalCharges = filtered
+    .filter((r) => r.type.includes("charge"))
+    .reduce((sum, r) => sum + r.amount, 0);
+  const balance = totalDeposits - totalTransfers - totalCharges;
 
   const accountTotals = filtered.reduce((acc, r) => {
     if (!acc[r.dest]) acc[r.dest] = 0;
     acc[r.dest] += r.amount;
     return acc;
   }, {});
+
   const topAccount = Object.entries(accountTotals).sort(
     (a, b) => b[1] - a[1]
   )[0];
@@ -313,8 +318,17 @@ export default function App() {
                   </span>
                 </li>
                 <li className="flex items-center gap-3 py-2">
-                  <Scale className="text-indigo-400" size={22} />
-                  <span className="text-indigo-400 font-semibold">
+                  <Siren className="text-blue-400" size={22} />
+                  <span className="text-blue-400 font-semibold">
+                    Total cargos:
+                  </span>
+                  <span className="ml-auto text-white font-semibold">
+                    {totalCharges.toLocaleString()}
+                  </span>
+                </li>
+                <li className="flex items-center gap-3 py-2">
+                  <Scale className="text-orange-400" size={22} />
+                  <span className="text-orange-400 font-semibold">
                     Balance:
                   </span>
                   <span className="ml-auto text-white font-semibold">
@@ -357,7 +371,7 @@ export default function App() {
                   <BarChart
                     data={timelineData}
                     layout="vertical"
-                    margin={{ top: 30, left: 80, right: 40, bottom: 30 }}
+                    margin={{ top: 30, left: -140, right: 40, bottom: 30 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis type="number" tick={{ fill: "#ccc" }} />
@@ -383,7 +397,11 @@ export default function App() {
                           fill={
                             entry.type.includes("deposit")
                               ? "#4caf50"
-                              : "#f44336"
+                              : entry.type.includes("transfer")
+                              ? "#f44336"
+                              : entry.type.includes("charge")
+                              ? "#2196f3"
+                              : "#000000"
                           }
                         />
                       ))}
@@ -405,10 +423,10 @@ export default function App() {
               title="Detalle de transacciones"
               className="col-span-3 overflow-x-auto"
             >
-              <table className="min-w-full text-left border-collapse rounded-2xl overflow-hidden">
+              <table className="min-w-full text-left border-collapse overflow-hidden">
                 <thead className="bg-gray-800 text-gray-300">
                   <tr>
-                    {["date", "amount", "type", "origin", "dest"].map(
+                    {["date", "amount","origin", "dest"].map( // "type" ocultado
                       (key, idx) => (
                         <th
                           key={idx}
@@ -440,12 +458,16 @@ export default function App() {
                         className={`py-2 px-4 font-semibold ${
                           r.type.includes("deposit")
                             ? "text-green-400"
-                            : "text-red-400"
+                            : r.type.includes("transfer")
+                            ? "text-red-400"
+                            : r.type.includes("charge")
+                            ? "text-blue-400"
+                            : "text-white"
                         }`}
                       >
                         {r.amount.toLocaleString()}
                       </td>
-                      <td className="py-2 px-4 capitalize">{r.type}</td>
+                      {/* <td className="py-2 px-4 capitalize">{r.type}</td> */}
                       <td className="py-2 px-4">{r.origin}</td>
                       <td className="py-2 px-4">{r.dest}</td>
                     </tr>
