@@ -10,9 +10,6 @@ import {
   LabelList,
   CartesianGrid,
   Brush,
-  LineChart,
-  Line,
-  Legend,
 } from "recharts";
 import { motion } from "framer-motion";
 import {
@@ -28,7 +25,6 @@ export default function App() {
   const [showDeposits, setShowDeposits] = useState(true);
   const [showTransfers, setShowTransfers] = useState(true);
 
-  // Parse Excel file
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -41,7 +37,7 @@ export default function App() {
       const sheet = workbook.Sheets[sheetName];
       const rawData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
 
-      const rows = rawData.slice(6).filter((r) => r.length >= 6); // desde fila 7
+      const rows = rawData.slice(6).filter((r) => r.length >= 6);
       const parsed = rows.map((row) => ({
         fecha: new Date(row[0]),
         monto: Number(row[2]) || 0,
@@ -56,7 +52,6 @@ export default function App() {
     reader.readAsBinaryString(file);
   };
 
-  // Filtrar según switches
   const toggleFilter = (type) => {
     let newShowDeposits = showDeposits;
     let newShowTransfers = showTransfers;
@@ -76,7 +71,6 @@ export default function App() {
     );
   };
 
-  // Cálculos resumen
   const deposits = filteredData
     .filter((d) => d.tipo === "deposit")
     .reduce((a, b) => a + b.monto, 0);
@@ -100,10 +94,8 @@ export default function App() {
   const topDay =
     Object.entries(dayCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "-";
 
-  const uniqueDestinos = [...new Set(filteredData.map((d) => d.destino))]
-    .length;
+  const uniqueDestinos = [...new Set(filteredData.map((d) => d.destino))].length;
 
-  // Timeline data
   const timelineData = filteredData.map((item) => ({
     fecha: item.fecha.toLocaleString(),
     monto: item.monto,
@@ -111,7 +103,6 @@ export default function App() {
     destino: item.destino,
   }));
 
-  // Custom Tooltip
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const d = payload[0].payload;
@@ -147,7 +138,7 @@ export default function App() {
         />
       </div>
 
-      {/* Summary Card */}
+      {/* Summary */}
       <motion.div
         className="grid md:grid-cols-3 gap-6"
         initial={{ opacity: 0, y: 20 }}
@@ -163,15 +154,15 @@ export default function App() {
               <span className="flex items-center gap-2">
                 <ArrowUpRight className="text-green-400" /> Depósitos:
               </span>
-              <span className="text-green-400">
-                {deposits.toLocaleString()}
-              </span>
+              <span className="text-green-400">{deposits.toLocaleString()}</span>
             </li>
             <li className="flex justify-between border-b border-gray-700 pb-2">
               <span className="flex items-center gap-2">
                 <ArrowDownRight className="text-red-400" /> Transferencias:
               </span>
-              <span className="text-red-400">{transfers.toLocaleString()}</span>
+              <span className="text-red-400">
+                {transfers.toLocaleString()}
+              </span>
             </li>
             <li className="flex justify-between border-b border-gray-700 pb-2">
               <span className="flex items-center gap-2">
@@ -181,22 +172,20 @@ export default function App() {
             </li>
             <li className="flex justify-between border-b border-gray-700 pb-2">
               <span className="flex items-center gap-2">
-                <ArrowUpRight className="text-blue-400" /> Cuenta destino con
-                más movimiento:
+                <ArrowUpRight className="text-blue-400" /> Cuenta destino con más
+                movimiento:
               </span>
               <span>{topAccount}</span>
             </li>
             <li className="flex justify-between border-b border-gray-700 pb-2">
               <span className="flex items-center gap-2">
-                <CalendarDays className="text-purple-400" /> Día con más
-                transacciones:
+                <CalendarDays className="text-purple-400" /> Día con más transacciones:
               </span>
               <span>{topDay}</span>
             </li>
             <li className="flex justify-between border-b border-gray-700 pb-2">
               <span className="flex items-center gap-2">
-                <ArrowUpRight className="text-pink-400" /> Total cuentas
-                destino:
+                <ArrowUpRight className="text-pink-400" /> Total cuentas destino:
               </span>
               <span>{uniqueDestinos}</span>
             </li>
@@ -249,39 +238,41 @@ export default function App() {
 
       {/* Timeline */}
       <motion.div
-        className="bg-gray-900 rounded-2xl p-6 shadow-lg"
+        className="bg-gray-900 rounded-2xl p-6 shadow-lg flex justify-center"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
       >
-        <h2 className="text-xl font-semibold mb-4 text-indigo-400">
-          Timeline Financiero
-        </h2>
-        <div className="h-96 overflow-x-scroll">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={timelineData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 10 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-              <XAxis dataKey="fecha" stroke="#aaa" />
-              <YAxis stroke="#aaa" />
-              <Tooltip content={<CustomTooltip />} />
-              <Brush dataKey="fecha" height={30} stroke="#6366f1" />
-              <Bar
-                dataKey="monto"
-                fill="#22c55e"
-                radius={[5, 5, 0, 0]}
-                onWheel={(e) => {
-                  e.currentTarget.parentElement.scrollLeft += e.deltaY;
-                }}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="w-full max-w-6xl">
+          <h2 className="text-xl font-semibold mb-4 text-indigo-400 text-center">
+            Timeline Financiero
+          </h2>
+          <div className="h-96 overflow-x-scroll">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={timelineData}
+                margin={{ top: 10, right: 30, left: 0, bottom: 10 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+                <XAxis dataKey="fecha" stroke="#aaa" />
+                <YAxis stroke="#aaa" />
+                <Tooltip content={<CustomTooltip />} />
+                <Brush dataKey="fecha" height={30} stroke="#6366f1" />
+                <Bar
+                  dataKey="monto"
+                  fill="#22c55e"
+                  radius={[5, 5, 0, 0]}
+                  onWheel={(e) => {
+                    e.currentTarget.parentElement.scrollLeft += e.deltaY;
+                  }}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </motion.div>
 
-      {/* Tabla de datos */}
+      {/* Tabla */}
       {filteredData.length > 0 && (
         <motion.div
           className="bg-gray-900 rounded-2xl p-6 shadow-lg"
