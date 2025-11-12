@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  Brush,
-} from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LabelList } from "recharts";
 import { motion } from "framer-motion";
 import { ArrowDownRight, ArrowUpRight, TrendingUp, CalendarDays } from "lucide-react";
 
