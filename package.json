@@ -2,11 +2,11 @@
   "name": "sapd-financial-cid",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
+"scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview"
+}
   "dependencies": {
     "framer-motion": "^10.12.7",
     "lucide-react": "^0.290.0",
