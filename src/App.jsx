@@ -9,6 +9,9 @@ import {
   ArrowDownCircle,
   ArrowUpCircle,
   Scale,
+  ArrowDownRight,
+  ArrowUpRight,
+  CalendarDays,
 } from "lucide-react";
 import {
   PieChart,
@@ -23,25 +26,8 @@ import {
   YAxis,
   CartesianGrid,
   Brush,
-} from "recharts";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
   LabelList,
-  CartesianGrid,
-  Brush,
 } from "recharts";
-import { motion } from "framer-motion";
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  TrendingUp,
-  CalendarDays,
-} from "lucide-react";
 
 function SwitchChip({ checked, label, onChange }) {
   return (
