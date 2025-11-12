@@ -111,6 +111,7 @@ export default function App() {
   const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
   const [showDeposits, setShowDeposits] = useState(true);
+  const [showCharges, setShowCharges] = useState(true);
   const [showTransfers, setShowTransfers] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
@@ -161,6 +162,7 @@ export default function App() {
   const filtered = data.filter((r) => {
     if (r.type.includes("deposit") && !showDeposits) return false;
     if (r.type.includes("transfer") && !showTransfers) return false;
+    if (r.type.includes("charge") && !showCharges) return false;
     return true;
   });
 
@@ -236,9 +238,23 @@ export default function App() {
         transition={{ duration: 0.7 }}
       >
         <div className="flex justify-between mb-6 gap-4 flex-wrap items-center">
-          <h1 className="text-3xl font-bold text-indigo-400 tracking-wide">
-            CID - Investigaciones Financieras
-          </h1>
+          <div className="flex gap-2">
+                    <SwitchChip
+                      checked={showCharges}
+                      label="Cargos"
+                      onChange={setShowCharges}
+                    />
+                    <SwitchChip
+                      checked={showDeposits}
+                      label="Depósitos"
+                      onChange={setShowDeposits}
+                    />
+                    <SwitchChip
+                      checked={showTransfers}
+                      label="Transferencias"
+                      onChange={setShowTransfers}
+                    />
+                  </div>
           <div>
             <input
               id="fileInput"
@@ -256,23 +272,13 @@ export default function App() {
         </div>
 
         {filtered.length > 0 && (
+          
           <div className="grid grid-cols-3 gap-8 mt-8">
             <Card
               title={
                 <div className="flex justify-between items-center">
                   <span>Distribución</span>
-                  <div className="flex gap-2">
-                    <SwitchChip
-                      checked={showDeposits}
-                      label="Depósitos"
-                      onChange={setShowDeposits}
-                    />
-                    <SwitchChip
-                      checked={showTransfers}
-                      label="Transferencias"
-                      onChange={setShowTransfers}
-                    />
-                  </div>
+                  
                 </div>
               }
               className="col-span-1"
